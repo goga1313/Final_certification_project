@@ -123,7 +123,7 @@ class ProductsApp:
             # Находим операцию по ID
             operation_index = None
             for i, op in enumerate(self.operations):
-                if op.id == selected_id:
+                if op.id == int(selected_id):
                     operation_index = i
                 break
         

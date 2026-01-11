@@ -28,7 +28,7 @@ def create_excel_file():
         file_path = os.path.join("FILE_EXCEL", filename)
         excel_writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
         df.to_excel(excel_writer, sheet_name='Журнал операций', index=False)
-        excel_writer.sheets['Журнал операций'].set_column(0, 4, 20)
+        excel_writer.sheets['Журнал операций'].set_column(0, 5, 20)
         excel_writer.close()       
     except Exception as e:
         print(f"Ошибка при сохранении данных: {e}")
