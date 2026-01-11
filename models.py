@@ -18,9 +18,9 @@ class Operation:
         }
     
 class ExpenseOperation(Operation):
-    def __init__(self):
+    def __init__(self, volume, category, date, op_type, comment=""):
         return
 
 class IncomeOperation(Operation):
-    def __init__(self):
+    def __init__(self, volume, category, date, op_type, comment=""):
         return
