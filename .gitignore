@@ -1,0 +1,11 @@
+# Excel + CSV
+*.xlsx
+*.xls
+*.csv
+
+# Файлы проекта
+data/
+FILE_EXCEL/
+
+# Python
+__pycache__/
