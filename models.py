@@ -23,21 +23,21 @@ class Operation:
 
     def to_dict(self):
         return {
+            "id": self.id, 
             "volume": self.volume,
             "category": self.category,
             "date": self.date.strftime("%Y-%m-%d"),
             "op_type": self.op_type,
-            "comment": self.comment, 
-            "id": self.id
+            "comment": self.comment          
         }
     
 class ExpenseOperation(Operation):
     """Операция расхода топлива"""
-    def __init__(self, volume, category, date, comment=""):
-        super().__init__(volume, category, date, "expense", comment)
+    def __init__(self, volume, category, date, comment="", operation_id=None):
+        super().__init__(volume, category, date, "expense", comment, operation_id)
 
 
 class IncomeOperation(Operation):
     """Операция прихода топлива"""
-    def __init__(self, volume, category, date, comment=""):
-        super().__init__(volume, category, date, "income", comment)
+    def __init__(self, volume, category, date, comment="", operation_id=None):
+        super().__init__(volume, category, date, "income", comment, operation_id)
