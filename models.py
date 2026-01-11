@@ -23,12 +23,12 @@ class Operation:
 
     def to_dict(self):
         return {
-            "id": self.id, 
             "volume": self.volume,
             "category": self.category,
             "date": self.date.strftime("%Y-%m-%d"),
             "op_type": self.op_type,
-            "comment": self.comment          
+            "comment": self.comment, 
+            "id": self.id          
         }
     
 class ExpenseOperation(Operation):

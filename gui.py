@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 from tkinter import messagebox
 from tkinter import ttk
 from models import Operation, IncomeOperation, ExpenseOperation
@@ -38,10 +39,9 @@ class ProductsApp:
         ttk.Checkbutton(root, text="Принято", variable=self.type_var, onvalue="income").grid(row=4, column=1)
         # Кнопки
         tk.Button(root, text="Добавить операцию", command=self.add_operation, bg="lightgreen").grid(row=5, column=0, padx=10)
-        tk.Button(root, text="Редактировать операцию", command=self.edit_data, bg="lightyellow").grid(row=5, column=1, padx=4)
-        tk.Button(root, text="Удалить операцию", command=self.add_operation, bg="lightcoral").grid(row=6, column=0, columnspan=2)
-        ttk.Button(root, text="Анализ", command=self.analyze).grid(row=7, column=0)
-        ttk.Button(root, text="Сохранить в excel", command=self.add_excel).grid(row=7, column=1)
+        tk.Button(root, text="Редактировать операцию", command=self.edit_data, bg="lightblue").grid(row=5, column=1, padx=4)
+        tk.Button(root, text="Анализ", command=self.analyze, bg="lightyellow").grid(row=7, column=0)
+        tk.Button(root, text="Сохранить в excel", command=self.add_excel, bg="lightyellow").grid(row=7, column=1)
         # Основное окно
         # Создаём таблицу с окном данных справа
         columns = ("id", "volume", "category", "date", "type", "comment")
@@ -139,13 +139,16 @@ class ProductsApp:
 
             # Создаём новую операцию с ТЕМ ЖЕ ID
             if op_type == "income":
-                new_op = IncomeOperation(volume, category, date, comment, selected_id)
+                new_op = IncomeOperation(volume, category, date, comment, int(selected_id))
             else:
-                new_op = ExpenseOperation(volume, category, date, comment, selected_id)
+                new_op = ExpenseOperation(volume, category, date, comment, int(selected_id))
             # Заменяем операцию
             self.operations[operation_index] = new_op    
 
             # Сохраняем данные
+                    
+            if os.path.exists("data/operations.csv"):
+                os.remove("data/operations.csv")
             save_operations(self.operations)
 
             # Обновляем интерфейс
