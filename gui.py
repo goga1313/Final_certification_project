@@ -91,9 +91,9 @@ class ProductsApp:
 
             # Полиморфное создание объекта
             if op_type == "income":
-                op = IncomeOperation(volume, category, date, comment)
+                op = IncomeOperation(float(volume), category, date, op_type, comment)
             else:
-                op = ExpenseOperation(volume, category, date, comment)
+                op = ExpenseOperation(float(volume), category, date, op_type, comment)
 
             # Сохраняем данные
             save_operations([op])            
