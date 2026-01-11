@@ -125,7 +125,7 @@ class ProductsApp:
             for i, op in enumerate(self.operations):
                 if op.id == int(selected_id):
                     operation_index = i
-                break
+                    break
         
             if operation_index is None:
                 messagebox.showerror("Ошибка", "Операция не найдена")
