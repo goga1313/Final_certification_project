@@ -18,9 +18,12 @@ class Operation:
         }
     
 class ExpenseOperation(Operation):
-    def __init__(self, volume, category, date, op_type, comment=""):
-        return
+    """Операция расхода топлива"""
+    def __init__(self, volume, category, date, comment=""):
+        super().__init__(volume, category, date, "expense", comment)
+
 
 class IncomeOperation(Operation):
-    def __init__(self, volume, category, date, op_type, comment=""):
-        return
+    """Операция прихода топлива"""
+    def __init__(self, volume, category, date, comment=""):
+        super().__init__(volume, category, date, "income", comment)
