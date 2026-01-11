@@ -19,7 +19,7 @@ def create_excel_file():
     
     try:
         # Замена названия колонок
-        columns = ["Количество, литры", "Марка топлива", "Дата операции", "Тип операции", "Комментарий"]
+        columns = ["ID", "Количество, литры", "Марка топлива", "Дата операции", "Тип операции", "Комментарий"]
         df = pd.read_csv(CSV_FILE, header=None, names=columns)
         df = df[df["Количество, литры"] != "volume"]
 
@@ -52,7 +52,7 @@ def save_operations(operations):
 
     try:
         with open(CSV_FILE, mode='a', newline='', encoding='utf-8') as f:
-            fieldnames = ["volume", "category", "date", "op_type", "comment"]
+            fieldnames = ["id", "volume", "category", "date", "op_type", "comment"]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
 
             # Записываем заголовок только при создании файла
@@ -82,12 +82,13 @@ def load_operations():
             # Преобразуем строку CSV в объект Operation с проверкой данных
             for row in reader_file:           
                 try:
-                    op = Operation(
+                    op = Operation(                         
                         volume=float(row["volume"]),
                         category=row["category"],
                         date=row["date"],
                         op_type=row["op_type"],
-                        comment=row.get("comment", "")                        
+                        comment=row.get("comment", ""), 
+                        operation_id=int(row["id"])
                     )
                     operations.append(op)
                 except ValueError as ve:

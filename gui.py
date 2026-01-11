@@ -44,7 +44,7 @@ class ProductsApp:
         ttk.Button(root, text="Сохранить в excel", command=self.add_excel).grid(row=7, column=1)
         # Основное окно
         # Создаём таблицу с окном данных справа
-        columns = ("volume", "category", "date", "type", "comment")
+        columns = ("id", "volume", "category", "date", "type", "comment")
         self.tree = ttk.Treeview(root, columns=columns, show="headings", height=15)
         self.tree.grid(row=0, column=2, rowspan=8, sticky="s", padx=10, pady=[25,10])
 
@@ -52,6 +52,7 @@ class ProductsApp:
         ttk.Label(root, text=" История операций ").grid(row=0, column=2, sticky="n", padx=5, pady=3)
 
         # Заголовки таблицы
+        self.tree.heading("id", text="ID")
         self.tree.heading("date", text="Дата")
         self.tree.heading("type", text="Тип")
         self.tree.heading("category", text="Марка")
@@ -59,6 +60,7 @@ class ProductsApp:
         self.tree.heading("comment", text="Комментарий")
 
         # Размер колонок
+        self.tree.column("id", width=40, anchor="center")
         self.tree.column("date", width=90, anchor="center")
         self.tree.column("type", width=90, anchor="center")
         self.tree.column("category", width=80, anchor="center")
@@ -91,9 +93,9 @@ class ProductsApp:
 
             # Полиморфное создание объекта
             if op_type == "income":
-                op = IncomeOperation(float(volume), category, date, op_type, comment)
+                op = IncomeOperation(float(volume), category, date, comment)
             else:
-                op = ExpenseOperation(float(volume), category, date, op_type, comment)
+                op = ExpenseOperation(float(volume), category, date, comment)
 
             # Сохраняем данные
             save_operations([op])            
@@ -115,6 +117,19 @@ class ProductsApp:
             messagebox.showwarning("Ошибка", "Выберите строку для изменения")
             return
         try:
+            # Получаем ID из выбранной строки
+            selected_id = self.tree.item(selected, "values")[0] # ID выбранной строки
+
+            # Находим операцию по ID
+            operation_index = None
+            for i, op in enumerate(self.operations):
+                if op.id == selected_id:
+                    operation_index = i
+                break
+        
+            if operation_index is None:
+                messagebox.showerror("Ошибка", "Операция не найдена")
+                return
             # Получаем и валидируем данные
             volume = validate_volume(self.volume_entry.get())
             category = validate_category(self.category_entry.get())
@@ -122,27 +137,20 @@ class ProductsApp:
             comment = self.comment_entry.get().strip()
             op_type = self.type_var.get()
 
-            op = Operation(
-                float(volume),
-                category,
-                date,
-                op_type,
-                comment                                                              
-            )
+            # Создаём новую операцию с ТЕМ ЖЕ ID
+            if op_type == "income":
+                new_op = IncomeOperation(volume, category, date, comment, selected_id)
+            else:
+                new_op = ExpenseOperation(volume, category, date, comment, selected_id)
+            # Заменяем операцию
+            self.operations[operation_index] = new_op    
 
             # Сохраняем данные
-            # save_operations([op])
-            for i in range(5):  
-                row_id = self.tree.item(selected, "values")[i]
-                print(row_id)
-            #self.operations[row_id] = op
-            # self.operations.pop(selected)
-            # self.operations.insert(selected, op)
-            #save_operations(self.operations)
+            save_operations(self.operations)
+
             # Обновляем интерфейс
             self.update_tree()
             self.clear_input_windows()
-
             messagebox.showinfo("Готово", "Операция добавлена")
 
         except Exception as e:
@@ -163,6 +171,7 @@ class ProductsApp:
         for op in self.operations:
             row_type = "Принято" if op.op_type == "income" else "Отпущено"
             self.tree.insert("", "end", values=(
+                op.id,  # Добавляем ID как первую колонку
                 f"{op.volume:.1f}",
                 op.category, 
                 op.date.strftime("%Y-%m-%d"), 
